@@ -3,7 +3,7 @@ on:
     branches:
       - master
 jobs:
-  build:
+  test:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Repository
@@ -16,3 +16,23 @@ jobs:
     strategy:
       matrix:
         service: ["test-api"]
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      - name: Deploying
+        uses: D3rHase/ssh-command-action@v0.3.1
+        with:
+          host: ${{secrets.HOST}}
+          user: ${{secrets.NAME}}
+          private_key: ${{secrets.SSH_PRIVATE_KEY}}
+          command: |
+            cd ${{secrets.PROJECT_FOLDER}};
+            git checkout master;
+            git pull;
+            docker-compose up
+
+          
+
