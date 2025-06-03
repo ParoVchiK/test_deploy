@@ -1,17 +1,18 @@
-name: test
-on: [push]
+on:
+  push:
+    branches:
+      - master
 jobs:
-  our-first-job:
+  build:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@master
-        - uses: actions/setup-python@v1
-          with:
-            python-version: '3.13'
-            architecture: 'x64'
-        - name: Install requiments
-          run: pip install -r requirments.txt
-        - name: Run tests
-          run: coverage run tests.py
-        - name: Tests report
-          run: coverage report
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+      - name: Build ${{ matrix.service }}
+        run: |
+          ls
+          docker buildx create --use
+          docker buildx bake ${{ matrix.service }}
+    strategy:
+      matrix:
+        service: ["test-api"]
