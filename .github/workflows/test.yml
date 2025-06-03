@@ -23,17 +23,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
       - name: Deploying
-        uses: D3rHase/ssh-command-action@v0.3.1
+        uses: appleboy/ssh-action@master
         with:
-          host: ${{secrets.HOST}}
-          user: ${{secrets.NAME}}
-          private_key: ${{secrets.SSH_PRIVATE_KEY}}
-          host_fingerprint: ${{ secrets.SSH_HOST_FINGERPRINT }}
-          command: |
+          host: ${{secrets.SSH_HOST}}
+          username: ${{secrets.SSH_NAME}}
+          key: ${{secrets.SSH_PRIVATE_KEY}}
+          script: |
             cd ${{secrets.PROJECT_FOLDER}};
-            git checkout master;
-            git pull;
-            docker-compose up
-
-          
-
+            git fetch git@github.com:ParoVchiK/test_deploy.git;
+            git pull git@github.com:ParoVchiK/test_deploy.git master;
+            docker-compose up -d
