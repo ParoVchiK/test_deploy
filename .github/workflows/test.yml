@@ -31,5 +31,5 @@ jobs:
           script: |
             cd ${{secrets.PROJECT_FOLDER}};
             git fetch git@github.com:ParoVchiK/test_deploy.git;
-            git pull git@github.com:ParoVchiK/test_deploy.git master;
+            git reset --hard FETCH_HEAD;
             docker-compose up -d
